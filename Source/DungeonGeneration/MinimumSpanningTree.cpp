@@ -30,14 +30,14 @@ TArray<Edge> MinimumSpanningTree::BuildTree(const TArray<Triangle>& Triangles)
     }
 
     // Deduplicates edges
-    for (int32 i = AllEdges.Num() - 1; i >= 0; --i)
+    for (int32 i = 0; i < AllEdges.Num(); ++i)
     {
-        for (int32 j = i - 1; j >= 0; --j)
+        for (int32 j = i + 1; j < AllEdges.Num(); ++j)
         {
             if (AllEdges[i] == AllEdges[j])
             {
-                AllEdges.RemoveAt(i);
-                break;
+                AllEdges.RemoveAt(j);
+                --j;
             }
         }
     }

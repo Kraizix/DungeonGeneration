@@ -45,16 +45,12 @@ void AGenerator::GenerateRandomRooms()
 void AGenerator::Triangulate()
 {
     TArray<Point*> Points;
-    for (auto Actor : SelectedRooms)
+    for (auto& Actor : SelectedRooms)
     {
         Points.Add(new Point(Actor->GetActorLocation().X, Actor->GetActorLocation().Y));
     }
     Delaunay Delaunay;
     Triangles = Delaunay.Triangulate(Points);
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("World delta for current frame equals %i"), Triangles.Num()));
-    }
 }
 
 void AGenerator::GenerateTree()
@@ -151,7 +147,7 @@ void AGenerator::Tick(float DeltaTime)
     {
         if (!Triangles.IsEmpty())
         {
-            for (auto t : Triangles)
+            for (auto& t : Triangles)
             {
                 DrawDebugLine(GetWorld(), FVector(t.p1->x, t.p1->y, 0), FVector(t.p2->x, t.p2->y, 0), FColor::Green);
                 DrawDebugLine(GetWorld(), FVector(t.p2->x, t.p2->y, 0), FVector(t.p3->x, t.p3->y, 0), FColor::Green);
@@ -200,8 +196,8 @@ void AGenerator::CreateHallway(const FVector& StartPoint, const FVector& EndPoin
 
 FVector AGenerator::GetRandomPointInEllipse(int32 ellipseHeight = 400, int32 ellipseWidth = 20)
 {
-    double t = 2 * 3.14 * Stream.RandRange(0.0f, 1.0f);
-    double u = Stream.RandRange(0.0f, 1.0f) * Stream.RandRange(0.0f, 1.0f);
+    double t = 2 * 3.14 * Stream.FRandRange(0.0f, 1.0f);
+    double u = Stream.FRandRange(0.0f, 1.0f) * Stream.FRandRange(0.0f, 1.0f);
     double r = u > 1 ? 2 - u : u;
     return FVector(ellipseWidth * r * FMath::Cos(t) / 2, ellipseHeight * r * FMath::Sin(t) / 2, 0);
 }

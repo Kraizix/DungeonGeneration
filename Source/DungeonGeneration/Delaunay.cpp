@@ -44,21 +44,25 @@ TArray<Triangle> Delaunay::Triangulate(TArray<Point*>& points)
             }
             return false;
         });
-
-        for (int32 j = Edges.Num() - 2; j >= 0; j--)
+        TArray<Edge> NewEdges;
+        for (int32 i = 0; i < Edges.Num(); ++i)
         {
-            for (int32 k = Edges.Num() - 1; k > j; k--)
+            bool IsUnique = true;
+            for (int32 j = 0; j < Edges.Num(); ++j)
             {
-                if (Edges[j] == Edges[k])
+                if (i != j && Edges[i] == Edges[j])
                 {
-                    Edges.RemoveAt(k);
-                    Edges.RemoveAt(j);
+                    IsUnique = false;
                     break;
                 }
             }
+            if (IsUnique)
+            {
+                NewEdges.Add(Edges[i]);
+            }
         }
 
-        for (const Edge& edge : Edges)
+        for (const Edge& edge : NewEdges)
         {
             Triangles.Add(Triangle(edge.p1, edge.p2, Point));
         }
